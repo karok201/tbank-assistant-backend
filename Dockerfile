@@ -34,6 +34,6 @@ COPY --from=builder /app/server .
 # Указываем порт, на котором работает сервер
 EXPOSE 8080
 
-ENV DB_URL="babich:babich@tcp(amvera-babich-run-tbank-db:3306)/babich?charset=utf8mb4&parseTime=True&loc=Local"
+ENV DB_URL="babich:babich@tcp(amvera-babich-run-tbank-db:3306)/tbank-db?charset=utf8mb4&parseTime=True&loc=Local"
 # Команда для запуска сервера
 CMD ["./server"]
