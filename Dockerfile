@@ -11,6 +11,9 @@ RUN chmod +x /entrypoint.sh
 
 COPY . /app
 
+ENV GO111MODULE=on
+ENV GOPROXY=https://proxy.golang.org,direct
+
 FROM alpine:latest
 
 COPY main.go go.mod go.sum ./
