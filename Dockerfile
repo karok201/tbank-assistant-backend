@@ -6,6 +6,10 @@ RUN chmod +x /entrypoint.sh
 
 COPY . /app
 
+FROM alpine:latest
+
+RUN apk add --no-cache git
+
 RUN go get github.com/gin-gonic/gin
 RUN go get github.com/golang-jwt/jwt/v5
 RUN go get github.com/joho/godotenv
