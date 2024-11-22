@@ -1,27 +1,41 @@
+# Используем официальный образ Go
 FROM golang:alpine AS builder
 
+ENV PORT="80"
+ENV DB_URL="babich:babich@amvera-babich-run-tbank-db/go_api_medium?parseTime=true"
+
+# Устанавливаем рабочую директорию
 WORKDIR /app
 
-COPY main.go go.mod go.sum ./
+# Копируем файлы для установки зависимостей
+COPY go.mod go.sum .env ./
 
-RUN CGO_ENABLED=0 go build -a -installsuffix cgo -o server
-
-COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-COPY . /app
-
-ENV GO111MODULE=on
-ENV GOPROXY=https://proxy.golang.org,direct
-
-FROM alpine:latest
-
-COPY main.go go.mod go.sum ./
-
-ADD go.mod .
-
-ADD go.sum .
-
+# Загружаем зависимости
 RUN go mod download
 
-ENTRYPOINT ["/entrypoint.sh"]
+# Копируем весь исходный код в контейнер
+COPY . .
+
+# Собираем приложение
+RUN go build -o server .
+
+# Минимизируем размер конечного образа
+FROM alpine:latest
+
+# Добавляем необходимые зависимости для запуска
+RUN apk --no-cache add ca-certificates
+
+# Устанавливаем рабочую директорию
+WORKDIR /root/
+
+# Копируем собранный сервер из предыдущего этапа
+COPY --from=builder /app/server .
+
+# Указываем порт, на котором работает сервер
+EXPOSE 8080
+
+ENV PORT="80"
+ENV DB_URL="babich:babich@amvera-babich-run-tbank-db/go_api_medium?parseTime=true"
+
+# Команда для запуска сервера
+CMD ["./server"]
