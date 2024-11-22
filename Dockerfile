@@ -8,16 +8,8 @@ COPY . /app
 
 FROM alpine:latest
 
-RUN apk add --no-cache git
+COPY main.go go.mod go.sum ./
 
-RUN go get github.com/gin-gonic/gin
-RUN go get github.com/golang-jwt/jwt/v5
-RUN go get github.com/joho/godotenv
-RUN go get golang.org/x/crypto
-RUN go get gorm.io/driver/mysql
-RUN go get gorm.io/gorm
-RUN go get github.com/githubnemo/CompileDaemon
-RUN go get github.com/spf13/viper
-RUN go get gorm.io/gorm
+RUN CGO_ENABLED=0 go build -a -installsuffix cgo -o server
 
 ENTRYPOINT ["/entrypoint.sh"]
