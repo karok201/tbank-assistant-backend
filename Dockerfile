@@ -34,7 +34,7 @@ COPY --from=builder /app/server .
 # Указываем порт, на котором работает сервер
 EXPOSE 8080
 
-ENV PORT="80"
+ENV PORT="3306"
 ENV DB_URL="babich:babich@amvera-babich-run-tbank-db/go_api_medium?parseTime=true"
 
 # Команда для запуска сервера
