@@ -10,15 +10,22 @@ import (
 )
 
 type CreateOperationRequestBody struct {
-	Type     string `json:"type"`
+	Type     int    `json:"type"`
 	Category string `json:"category"`
 	Date     string `json:"date"`
-	Amount   string `json:"amount"`
+	Amount   int    `json:"amount"`
 	Comment  string `json:"comment"`
 }
 
 func (h handler) CreateOperation(c *gin.Context) {
 	var userFound models.User
+
+	body := CreateOperationRequestBody{}
+
+	if err := c.BindJSON(&body); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
 
 	userId, err := utils.GetUserIdFromToken(c)
 	if err != nil {
@@ -34,13 +41,19 @@ func (h handler) CreateOperation(c *gin.Context) {
 	}
 
 	document := struct {
-		Id    int    `json:"id"`
-		Name  string `json:"name"`
-		Price int    `json:"price"`
+		UserId   int    `json:"user_id"`
+		Type     int    `json:"type"`
+		Category string `json:"category"`
+		Date     string `json:"date"`
+		Amount   int    `json:"amount"`
+		Comment  string `json:"comment"`
 	}{
-		Id:    1,
-		Name:  "Foo",
-		Price: 10,
+		UserId:   userId,
+		Type:     body.Type,
+		Category: body.Category,
+		Date:     body.Date,
+		Amount:   body.Amount,
+		Comment:  body.Comment,
 	}
 
 	jsonDocument, err := json.Marshal(document)
@@ -49,7 +62,10 @@ func (h handler) CreateOperation(c *gin.Context) {
 		return
 	}
 
-	res, err := h.ES.Index("index_name", bytes.NewReader(jsonDocument))
+	res, err := h.ES.Index("user_operations", bytes.NewReader(jsonDocument))
+	if err != nil {
+		c.JSON(res.StatusCode, gin.H{"error": res.String()})
+	}
 
-	c.JSON(http.StatusOK, res)
+	c.JSON(http.StatusOK, gin.H{"res": "success"})
 }

@@ -21,4 +21,5 @@ func RegisterRoutes(r *gin.Engine, db *gorm.DB, es *elasticsearch.Client) {
 	routes := r.Group("/user")
 	routes.GET("/profile", h.GetUser)
 	routes.POST("/operations", h.CreateOperation)
+	routes.GET("/operations/period", h.GetOperationsPeriod)
 }
