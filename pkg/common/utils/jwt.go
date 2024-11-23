@@ -13,7 +13,7 @@ import (
 var jwtSecret = []byte(viper.GetString("JWT_SECRET"))
 
 type Claims struct {
-	UserID int `json:"user_id"`
+	UserID string `json:"user_id"`
 	jwt.RegisteredClaims
 }
 
@@ -76,5 +76,10 @@ func GetUserIdFromToken(c *gin.Context) (int, error) {
 		return -1, errors.New("invalid token")
 	}
 
-	return claims.UserID, nil
+	userID, err := strconv.Atoi(claims.UserID)
+	if err != nil {
+		return -1, fmt.Errorf("invalid user ID: %v", err)
+	}
+
+	return userID, nil
 }
