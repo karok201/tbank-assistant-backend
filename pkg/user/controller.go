@@ -1,4 +1,4 @@
-package books
+package user
 
 import (
 	"github.com/elastic/go-elasticsearch/v8"
@@ -18,10 +18,7 @@ func RegisterRoutes(r *gin.Engine, db *gorm.DB, es *elasticsearch.Client) {
 		ES: es,
 	}
 
-	routes := r.Group("/books")
-	routes.POST("/", h.AddBook)
-	routes.GET("/", h.GetBooks)
-	routes.GET("/:id", h.GetBook)
-	routes.PUT("/:id", h.UpdateBook)
-	routes.DELETE("/:id", h.DeleteBook)
+	routes := r.Group("/user")
+	routes.GET("/profile", h.GetUser)
+	routes.POST("/operations", h.CreateOperation)
 }

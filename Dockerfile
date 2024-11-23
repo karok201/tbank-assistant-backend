@@ -1,9 +1,6 @@
 # Используем официальный образ Go
 FROM golang:alpine AS builder
 
-ENV PORT="80"
-ENV DB_URL="babich:babich@amvera-babich-run-tbank-db/go_api_medium?parseTime=true"
-
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
@@ -34,6 +31,6 @@ COPY --from=builder /app/server .
 # Указываем порт, на котором работает сервер
 EXPOSE 8080
 
-ENV DB_URL="babich:babich@tcp(amvera-babich-run-tbank-db:3306)/tbank-db?charset=utf8mb4&parseTime=True&loc=Local"
+ENV DB_URL="babich:babich@tcp(127.0.0.1:3306)/tbank-db?charset=utf8mb4&parseTime=True&loc=Local"
 # Команда для запуска сервера
 CMD ["./server"]

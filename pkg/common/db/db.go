@@ -9,6 +9,7 @@ import (
 )
 
 func Init(url string) *gorm.DB {
+	println(url)
 	db, err := gorm.Open(mysql.Open(url), &gorm.Config{})
 
 	if err != nil {

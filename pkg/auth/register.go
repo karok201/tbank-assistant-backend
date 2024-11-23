@@ -5,6 +5,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"tbank-assistant-backend/pkg/common/models"
+	"tbank-assistant-backend/pkg/common/utils"
 )
 
 type RegisterUserBody struct {
@@ -52,5 +53,15 @@ func (h handler) RegisterUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, "success")
+	token, err := utils.GenerateToken(int(user.ID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		return
+	}
+
+	response := ResponseBody{
+		Token: token,
+	}
+
+	c.JSON(http.StatusOK, response)
 }
