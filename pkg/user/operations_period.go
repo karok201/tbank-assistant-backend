@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"strconv"
 	"tbank-assistant-backend/pkg/common/models"
 	"tbank-assistant-backend/pkg/common/utils"
 )
@@ -48,13 +49,21 @@ func (h handler) GetOperationsPeriod(c *gin.Context) {
 	}
 
 	query := map[string]interface{}{
+		"size": 10000,
 		"query": map[string]interface{}{
 			"bool": map[string]interface{}{
-				"must": map[string]interface{}{
-					"range": map[string]interface{}{
-						"date": map[string]interface{}{
-							"gte": body.StartDate,
-							"lte": body.EndDate,
+				"must": []interface{}{
+					map[string]interface{}{
+						"terms": map[string]interface{}{
+							"user_id": []string{strconv.Itoa(userId)},
+						},
+					},
+					map[string]interface{}{
+						"range": map[string]interface{}{
+							"date": map[string]interface{}{
+								"gte": body.StartDate,
+								"lte": body.EndDate,
+							},
 						},
 					},
 				},
@@ -95,7 +104,7 @@ func (h handler) GetOperationsPeriod(c *gin.Context) {
 			"type":     int(source.(map[string]interface{})["type"].(float64)),
 			"amount":   int(source.(map[string]interface{})["amount"].(float64)),
 			"date":     source.(map[string]interface{})["date"].(string),
-			"category": source.(map[string]interface{})["category"].(string),
+			"category": int(source.(map[string]interface{})["category"].(float64)),
 		}
 		documents = append(documents, doc)
 	}

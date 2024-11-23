@@ -17,6 +17,14 @@ type CreateOperationRequestBody struct {
 	Comment  string `json:"comment"`
 }
 
+// @Summary Add a new pet to the store
+// @Description get string by ID
+// @ID get-string-by-int
+// @Accept  json
+// @Produce  json
+// @Param   some_id     path    int     true        "Some ID"
+// @Success 200 {string} string  "ok"
+// @Router /string/{some_id} [get]
 func (h handler) CreateOperation(c *gin.Context) {
 	var userFound models.User
 
@@ -51,7 +59,7 @@ func (h handler) CreateOperation(c *gin.Context) {
 		UserId:   userId,
 		Type:     body.Type,
 		Category: body.Category,
-		Date:     body.Date,
+		Date:     body.Date[10:],
 		Amount:   body.Amount,
 		Comment:  body.Comment,
 	}
