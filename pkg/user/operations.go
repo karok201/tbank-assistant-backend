@@ -59,7 +59,7 @@ func (h handler) CreateOperation(c *gin.Context) {
 		UserId:   userId,
 		Type:     body.Type,
 		Category: body.Category,
-		Date:     body.Date[10:],
+		Date:     body.Date[:10],
 		Amount:   body.Amount,
 		Comment:  body.Comment,
 	}

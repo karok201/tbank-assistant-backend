@@ -23,4 +23,5 @@ func RegisterRoutes(r *gin.Engine, db *gorm.DB, es *elasticsearch.Client) {
 	routes.POST("/operations", h.CreateOperation)
 	routes.POST("/operations/period", h.GetOperationsPeriod)
 	routes.POST("/operations/cheque", h.CreateOperationsByCheque)
+	routes.GET("/operations/balance", h.GetUserBalance)
 }
